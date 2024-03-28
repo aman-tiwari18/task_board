@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
@@ -10,9 +10,37 @@ import NewTask from "./NewTask";
 const HomePage = () => {
   const [value, onChange] = useState("");
 
+  const [tasks, setTasks] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [tasks, setTasks] = useState([]);
+  const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [filteredTasks, setFilteredTasks] = useState([]);
+
+  const [priorityFilter, setPriorityFilter] = useState("");
+
+  useEffect(() => {
+    const assignerFilteredTasks = tasks.filter((task) =>
+      task.assignee.toLowerCase().includes(assigneeFilter.toLowerCase())
+    );
+
+    const priorityFilteredTasks = tasks.filter((task) =>
+      task.priority.toLowerCase().includes(priorityFilter.toLowerCase())
+    );
+
+    if (assigneeFilter && !priorityFilter) {
+      setFilteredTasks(assignerFilteredTasks);
+    } else if (!assigneeFilter && priorityFilter) {
+      setFilteredTasks(priorityFilteredTasks);
+    } else if (assigneeFilter && priorityFilter) {
+      const intersection = assignerFilteredTasks.filter((task) =>
+        priorityFilteredTasks.includes(task)
+      );
+      setFilteredTasks(intersection);
+    } else {
+      setFilteredTasks(tasks);
+    }
+  }, [tasks, assigneeFilter, priorityFilter]);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -33,10 +61,16 @@ const HomePage = () => {
             name="Assignee name"
             placeholder="Assignee name"
             className="bg-white rounded-lg px-2"
+            value={assigneeFilter}
+            onChange={(e) => setAssigneeFilter(e.target.value)}
           />
 
           <div>
-            <select className="px-2   rounded-md text-gray-500">
+            <select
+              className="px-2   rounded-md text-gray-500"
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+            >
               <option value="" className="text-gray-300">
                 Priority
               </option>
@@ -93,21 +127,38 @@ const HomePage = () => {
             <Category status="pending" />
           </div>
           <div className="w-full p-2 h-[170px]">
-            {tasks.map(
-              (temp, index) =>
-                temp.status === "pending" && (
-                  <TaskCard
-                    title={temp.name}
-                    priority={temp.priority}
-                    description={temp.description}
-                    assignee={temp.assignee}
-                    task={temp}
-                    taskList={tasks}
-                    setTasks={setTasks}
-                    key={temp.id}
-                  />
+            {(assigneeFilter !== "" || priorityFilter !== "") &&
+            filteredTasks.length > 0
+              ? filteredTasks.map(
+                  (temp, index) =>
+                    temp.status === "pending" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
                 )
-            )}
+              : tasks.map(
+                  (temp, index) =>
+                    temp.status === "pending" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
+                )}
           </div>
         </div>
         <div className=" w-1/5 bg-white flex flex-col  items-center rounded-md overflow-y-auto no-scrollbar ">
@@ -115,21 +166,38 @@ const HomePage = () => {
             <Category status="In progress" />
           </div>
           <div className="w-full p-2 h-[170px]">
-            {tasks.map(
-              (temp, index) =>
-                temp.status === "In progress" && (
-                  <TaskCard
-                    title={temp.name}
-                    priority={temp.priority}
-                    description={temp.description}
-                    assignee={temp.assignee}
-                    task={temp}
-                    taskList={tasks}
-                    setTasks={setTasks}
-                    key={temp.id}
-                  />
+            {(assigneeFilter !== "" || priorityFilter !== "") &&
+            filteredTasks.length > 0
+              ? filteredTasks.map(
+                  (temp, index) =>
+                    temp.status === "In progress" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
                 )
-            )}
+              : tasks.map(
+                  (temp, index) =>
+                    temp.status === "In progress" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
+                )}
           </div>
         </div>
 
@@ -138,21 +206,38 @@ const HomePage = () => {
             <Category status="Completed" />
           </div>
           <div className="w-full p-2 h-[170px]">
-            {tasks.map(
-              (temp, index) =>
-                temp.status === "Completed" && (
-                  <TaskCard
-                    title={temp.name}
-                    priority={temp.priority}
-                    description={temp.description}
-                    assignee={temp.assignee}
-                    task={temp}
-                    taskList={tasks}
-                    setTasks={setTasks}
-                    key={temp.id}
-                  />
+            {(assigneeFilter !== "" || priorityFilter !== "") &&
+            filteredTasks.length > 0
+              ? filteredTasks.map(
+                  (temp, index) =>
+                    temp.status === "Completed" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
                 )
-            )}
+              : tasks.map(
+                  (temp, index) =>
+                    temp.status === "Completed" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
+                )}
           </div>
         </div>
         <div className=" w-1/5 bg-white flex flex-col  items-center rounded-md overflow-y-auto no-scrollbar">
@@ -161,21 +246,38 @@ const HomePage = () => {
           </div>
 
           <div className="w-full p-2 h-[170px]">
-            {tasks.map(
-              (temp, index) =>
-                temp.status === "Deployed" && (
-                  <TaskCard
-                    title={temp.name}
-                    priority={temp.priority}
-                    description={temp.description}
-                    assignee={temp.assignee}
-                    task={temp}
-                    taskList={tasks}
-                    setTasks={setTasks}
-                    key={temp.id}
-                  />
+            {(assigneeFilter !== "" || priorityFilter !== "") &&
+            filteredTasks.length > 0
+              ? filteredTasks.map(
+                  (temp, index) =>
+                    temp.status === "Deployed" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
                 )
-            )}
+              : tasks.map(
+                  (temp, index) =>
+                    temp.status === "Deployed" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
+                )}
           </div>
         </div>
         <div className="w-1/5 bg-white flex flex-col  items-center rounded-md overflow-y-auto no-scrollbar">
@@ -183,21 +285,38 @@ const HomePage = () => {
             <Category status="Deffered" />
           </div>
           <div className="w-full p-2 h-[170px]">
-            {tasks.map(
-              (temp, index) =>
-                temp.status === "Deffered" && (
-                  <TaskCard
-                    title={temp.name}
-                    priority={temp.priority}
-                    description={temp.description}
-                    assignee={temp.assignee}
-                    task={temp}
-                    taskList={tasks}
-                    setTasks={setTasks}
-                    key={temp.id}
-                  />
+            {(assigneeFilter !== "" || priorityFilter !== "") &&
+            filteredTasks.length > 0
+              ? filteredTasks.map(
+                  (temp, index) =>
+                    temp.status === "Deffered" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
                 )
-            )}
+              : tasks.map(
+                  (temp, index) =>
+                    temp.status === "Deffered" && (
+                      <TaskCard
+                        title={temp.name}
+                        priority={temp.priority}
+                        description={temp.description}
+                        assignee={temp.assignee}
+                        task={temp}
+                        taskList={tasks}
+                        setTasks={setTasks}
+                        key={temp.id}
+                      />
+                    )
+                )}
           </div>
         </div>
       </div>
