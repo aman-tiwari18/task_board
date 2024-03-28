@@ -41,15 +41,14 @@ const EditTask = (props) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex-col flex justify-center items-center bg-white bg-opacity-50 z-10">
-      <div className="flex justify-between items-center w-[400px] bg-white px-2">
+    <div className="fixed top-0 left-0 w-full h-full flex-col  flex justify-center items-center bg-gray-400 bg-opacity-50 z-10">
+      <div className="flex justify-between items-center w-[320px] bg-white px-6">
         <h1 className="font-semibold"> EDIT TASK</h1>
         <div className="rounded-full border-1 border-gray-400 p-2">
           <button onClick={props.onClose}>X</button>
         </div>
       </div>
-      <div className="bg-background w-[400px] p-2">
-        {/* Task creation form */}
+      <div className="bg-background w-[320px] p-4 px-6">
         <div className="flex flex-col gap-2">
           <label>Title:</label>
           <input
@@ -63,7 +62,7 @@ const EditTask = (props) => {
             type="text"
             value={description}
             readOnly
-            className="bg-inputcolor w-[250px] p-1 rounded-md"
+            className="bg-inputcolor w-[250px] h-12 p-1 rounded-md"
           />
           <label>Team:</label>
           <input
@@ -79,28 +78,30 @@ const EditTask = (props) => {
             readOnly
             className="bg-inputcolor w-[250px] p-1 rounded-md"
           />
-          <label>Priority:</label>
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            className="px-2 rounded-md bg-inputcolor text-gray-500"
-          >
-            <option value="P0">P0</option>
-            <option value="P1">P1</option>
-            <option value="P2">P2</option>
-          </select>
-          <label>Status:</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="px-2 rounded-md bg-inputcolor text-gray-500"
-          >
-            <option value="pending">pending</option>
-            <option value="In progress">In progress</option>
-            <option value="Completed">Completed</option>
-            <option value="Deployed">Deployed</option>
-            <option value="Deffered">Deffered</option>
-          </select>
+          <div className="flex justify-between items-center  py-4 pt-6">
+            <label>Priority:</label>
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="rounded-md bg-inputcolor text-gray-500"
+            >
+              <option value="P0">P0</option>
+              <option value="P1">P1</option>
+              <option value="P2">P2</option>
+            </select>
+            <label>Status:</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="rounded-md bg-inputcolor text-gray-500"
+            >
+              <option value="pending">pending</option>
+              <option value="In progress">In progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Deployed">Deployed</option>
+              <option value="Deffered">Deffered</option>
+            </select>
+          </div>
         </div>
       </div>
 

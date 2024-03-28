@@ -1,13 +1,26 @@
 import React, { useState } from "react";
 import logo from "../assets/vertical-dot-button.png";
 import EditTask from "./EditTask";
-import EditDeleteModal from "./EditDelete";
 
 const TaskCard = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isEditOpen, setEditOpen] = useState(false);
+  const [isDeleteOpen, setDeleteOpen] = useState(false);
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const close = () => {
+    setIsModalOpen(false);
+    setEditOpen(false);
+    setDeleteOpen(false);
+  };
+  const toggleEdit = () => {
+    setEditOpen(!isEditOpen);
+  };
+
+  const toggleDelete = () => {
+    setDeleteOpen(!isDeleteOpen);
   };
 
   const handleEditTask = (updatedTask) => {
@@ -19,7 +32,16 @@ const TaskCard = (props) => {
     });
 
     props.setTasks(editedTask);
-    toggleModal();
+    close();
+  };
+
+  const handleDeleteTask = () => {
+    const updatedTaskList = props.taskList.filter(
+      (temp) => temp.id !== props.task.id
+    );
+
+    props.setTasks(updatedTaskList);
+    close();
   };
 
   return (
@@ -38,21 +60,78 @@ const TaskCard = (props) => {
           <div className="text-md py-1">@{props.assignee}</div>
           <button
             className="bg-buttoncolor w-[22px] h-[20px] flex justify-center p-1 items-center rounded-sm"
-            onClick={toggleModal}
+            onClick={toggleEdit}
           >
             <img src={logo} alt="logo" />
           </button>
-          {isModalOpen && (
-            <EditTask
-              onClose={toggleModal}
-              editedTask={props.task}
-              onSave={handleEditTask}
-            />
-            // <EditDeleteModal
-            //   onClose={toggleModal}
-            //   editedTask={props.task}
-            //   onSave={handleEditTask}
-            // />
+          {isEditOpen && (
+            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-400 bg-opacity-50 z-50">
+              <div className="bg-gray-400  rounded-lg">
+                <div className="flex flex-col   text-black">
+                  <button
+                    className="   pr-20 px-3 hover:bg-buttoncolor py-2 rounded-md "
+                    onClick={toggleModal}
+                  >
+                    Edit
+                  </button>
+                  <hr className="border-1 border-white  px-2  mx-3 " />
+                  {isModalOpen && (
+                    <EditTask
+                      onClose={close}
+                      onSave={handleEditTask}
+                      editedTask={props.task}
+                    />
+                  )}
+                  <button
+                    className="  pr-12 hover:bg-red-500 py-2 rounded-md"
+                    onClick={toggleDelete}
+                  >
+                    Delete
+                  </button>
+                  {isDeleteOpen && (
+                    <div className="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-800 bg-opacity-50 z-50">
+                      <div className="flex justify-between items-center w-[300px] bg-white px-4">
+                        <h1 className="font-bold"> EDIT TASK</h1>
+                        <div className="rounded-full border-1 border-gray-400 p-2">
+                          <button onClick={close}>X</button>
+                        </div>
+                      </div>
+                      <div className="bg-background p-4   w-[300px]">
+                        <p className="text-md mb-4">
+                          Do You wish to delete Task
+                        </p>
+                        <div className="flex justify-between items-center">
+                          <div className="font-bold text-md">
+                            {" "}
+                            {props.task.name}{" "}
+                          </div>
+                          <div className="flex gap-6">
+                            <button
+                              className="bg-buttoncolor  text-white px-6   rounded-sm "
+                              onClick={handleDeleteTask}
+                            >
+                              Yes
+                            </button>
+                            <button
+                              className="bg-buttoncolor  text-white px-6  rounded-sm"
+                              onClick={close}
+                            >
+                              No
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <button
+                  className="absolute top-2 right-2 text-gray-500"
+                  // onClick={toggleModal}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           )}
         </div>
         <div className="px-2  ">

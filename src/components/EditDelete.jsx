@@ -33,7 +33,6 @@ const EditDeleteModal = (props) => {
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
       <div className="bg-white p-4 rounded-lg">
-        <h2 className="text-xl font-semibold mb-4">Edit or Delete Task</h2>
         <div className="flex justify-between">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md mr-2"

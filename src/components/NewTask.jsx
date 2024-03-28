@@ -6,7 +6,7 @@ const NewTask = ({ onClose, onSave, task }) => {
   const [description, setDescription] = useState("");
   const [team, setTeam] = useState("");
   const [assignee, setAssignee] = useState("");
-  const [priority, setPriority] = useState("");
+  const [priority, setPriority] = useState("P0");
 
   console.log(task);
 
