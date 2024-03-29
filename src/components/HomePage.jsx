@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import DatePicker from "react-date-picker";
+
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "./HomePage.css";
@@ -8,8 +9,40 @@ import TaskCard from "./TaskCard";
 import NewTask from "./NewTask";
 
 const HomePage = () => {
-  const [value, onChange] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [activeDate, setActiveDate] = useState("start");
 
+  const handleDateChange = (date) => {
+    if (activeDate === "start") {
+      if (startDate === "") {
+        setStartDate(date);
+        setActiveDate("end");
+      } else {
+        if ((startDate || date) > (endDate && endDate !== "")) {
+          setStartDate(null);
+          setEndDate(null);
+          setActiveDate("start");
+        }
+      }
+    } else {
+      if (endDate === "") {
+        if (endDate && date > startDate) {
+          setEndDate(date);
+          setActiveDate("start");
+        } else {
+          setEndDate(null);
+          setActiveDate("end");
+        }
+      } else {
+        if ((startDate && date) > (endDate && endDate !== "")) {
+          setStartDate(null);
+          setEndDate(null);
+          setActiveDate("start");
+        }
+      }
+    }
+  };
   const [tasks, setTasks] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,10 +115,21 @@ const HomePage = () => {
             </select>
           </div>
 
-          <div className="bg-white rounded-lg px-2">
+          <div className="bg-white rounded-lg px-2 flex ">
             <DatePicker
-              onChange={onChange}
-              value={value}
+              onChange={handleDateChange}
+              value={startDate}
+              clearIcon={null}
+              dayPlaceholder="DD"
+              monthPlaceholder="MM"
+              yearPlaceholder="YY"
+              calendarIcon={null}
+              className="react-date-picker__wrapper"
+            />
+            <div className="px-1">-</div>
+            <DatePicker
+              onChange={handleDateChange}
+              value={endDate}
               clearIcon={null}
               dayPlaceholder="DD"
               monthPlaceholder="MM"
